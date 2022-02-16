@@ -6,79 +6,126 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:18:48 by dyeboa        #+#    #+#                 */
-/*   Updated: 2021/10/26 16:43:32 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/02/16 16:58:59 by dyeboa        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <libc.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stddef.h>
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 20
 
-static char *gnlfiller(int fd, int i, char *buffer)
+int BUFFER_SIZE = 1;
+
+char	*gnlread(int fd, char *str)
 {
-	int	newline;
-	char *str;
-	int j;
+	char *buff;
+	int i;
 	
-	newline = 0;
-	j = 0;
-	str = (char *)malloc(sizeof(char) * (i + 1));
-	// while (j < i)
-	// {
-	// 	str[j] = buffer[newline];
-	// 	j++;
-	// 	newline++;
-	// }
-	str[j] = '\0';
-	j = 0;
-	printf("test");
+	i = 1;
+	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buff)
+		return (NULL);
+	while (i != 0)
+	{
+		i = read(fd, buff, BUFFER_SIZE);
+		if (i == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[i] = '\0';
+		str = ft_strjoin(str, buff);
+	}
+	free (buff);
 	return (str);
-	
+}
+
+char	*parse_line(char *str)
+{
+	char	*res;
+	int		i;
+
+	i = 0;
+	if (str[i] == '\0')
+		return (NULL);
+	while (str[i++])
+		if (str[i++] == '\n')
+			break ;
+	res = malloc(sizeof(char) * (i + 1));
+	if (!res)
+		return (NULL);
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\n')
+		{
+			res[i] = str[i];
+			i++;
+			break ;
+		}
+		res[i] = str[i];
+	}
+	res[i] = '\0';
+	return (res);
+}
+
+char	*clear_stat(char *stat)
+{
+	char	*res;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (stat[i] && stat[i] != '\n')
+		i++;
+	if (stat[i] == '\0')
+	{
+		free(stat);
+		return (NULL);
+	}
+	res = malloc(sizeof(char) * ft_strlen(stat) - i + 1);
+	if (!res)
+		return (NULL);
+	i++;
+	while (stat[i])
+		res[j++] = stat[i++];
+	res[j] = '\0';
+	free(stat);
+	return (res);
 }
 
 char *get_next_line(int fd)
 {
-	char buffer[BUFFER_SIZE];
-	int k;
-	int bytes_read;
+	static char *str;
 	char *b;
 
-	if (fd == -1)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	printf("test");
-	while ((bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)	
-	{
-		buffer[bytes_read] = '\0';
-		while ((buffer[k]) != '\n')
-			k++;
-		b = gnlfiller(fd, k, buffer);
-		printf("test %s", b);		
-	}
-	printf("test");
-	return (NULL);
+	str = gnlread(fd, str);
+	if (!str)
+		return (NULL);
+	b = parse_line(str);
+	str = clear_stat(str);
+	return (b);
 }
 
-int main()
-{
-    //char buffer[BUFFER_SIZE];
-    const int fd = open("input.txt", O_RDONLY);
-    //int bytes_read;
-	get_next_line(fd);
-   	// 	bytes_read = read(fd, buffer, 20);
-   	// 	buffer[bytes_read] = '\0';
-	//	if (buffer[4] == '\n')
-	//	printf("bytes read: %d -> %c | \n", bytes_read, buffer[5]);
-    //	printf("bytes read: %d -> %c | \n", bytes_read, buffer[5]);
-	//	system("leaks a.out")
-    return 0;
-}
-#endif
+// int main()
+// {
+// 	int BUFFER_SIZE = 10;
+//     const int fd = read("input.txt", O_RDONLY, BUFFER_SIZE);
+
+// 	get_next_line(fd);
+// 	system("leaks a.out");
+//     return 0;
+// }
+
 /*
+system("leaks a.out")
 
 File descriptor to read from
 Read line:  correct behavior
@@ -93,8 +140,5 @@ if the BUFFER_SIZE value is 1? And 10000000? Do you know why?
 Plan van aanpak: 
 Static functie bij lezen van file - waarde van '\n'
 Lezen per byte, stoppen bij end of line character, doorgaan tot EOF en erna = 0
-
-
-
 
 */
