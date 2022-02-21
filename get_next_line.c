@@ -6,113 +6,109 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:18:48 by dyeboa        #+#    #+#                 */
-/*   Updated: 2022/02/16 16:58:59 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/02/21 18:16:52 by yeboa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <libc.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stddef.h>
-
-int BUFFER_SIZE = 1;
-
-char	*gnlread(int fd, char *str)
+char	*read_all(int fd, char *text)
 {
-	char *buff;
-	int i;
-	
-	i = 1;
-	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buff)
+	char	*line;
+	ssize_t		i;
+
+	line = (char *)malloc(BUFFER_SIZE + 1);
+	if (!line)
 		return (NULL);
-	while (i != 0)
+	i = 1;
+	while (!(ft_strchr(text, '\n')) && i != 0)
 	{
-		i = read(fd, buff, BUFFER_SIZE);
+		i = read(fd, line, BUFFER_SIZE);
 		if (i == -1)
 		{
-			free(buff);
+			free(line);
 			return (NULL);
 		}
-		buff[i] = '\0';
-		str = ft_strjoin(str, buff);
+		line[i] = '\0';
+		text = ft_strjoin(text, line);
 	}
-	free (buff);
-	return (str);
+	free(line);
+	return (text);
 }
 
-char	*parse_line(char *str)
+char	*get_line(char	*text)
 {
-	char	*res;
-	int		i;
+	char	*line;
+	size_t	len;
+	size_t	y;
 
-	i = 0;
-	if (str[i] == '\0')
+	len = 0;
+	y = 0;
+	if (text[0] == '\0')
 		return (NULL);
-	while (str[i++])
-		if (str[i++] == '\n')
-			break ;
-	res = malloc(sizeof(char) * (i + 1));
-	if (!res)
-		return (NULL);
-	i = -1;
-	while (str[++i])
+	while (text[len] != '\n' && text[len] != '\0')
+		len++;
+	if (text[len] == '\n')
+		len++;
+	line = (char *)malloc(len + 1);
+	if (!line)
+		return (0);
+	while (y < len)
 	{
-		if (str[i] == '\n')
-		{
-			res[i] = str[i];
-			i++;
-			break ;
-		}
-		res[i] = str[i];
+		line[y] = text[y];
+		y++;
 	}
-	res[i] = '\0';
-	return (res);
+	line[y] = '\0';
+	return (line);
 }
 
-char	*clear_stat(char *stat)
+char	*skip_line(char	*text)
 {
-	char	*res;
-	int		i;
-	int		j;
+	size_t	i;
+	size_t	l;
+	char	*newtxt;
 
 	i = 0;
-	j = 0;
-	while (stat[i] && stat[i] != '\n')
+	l = 0;
+	while (text[i] != '\n' && text[i] != '\0')
 		i++;
-	if (stat[i] == '\0')
+	if (!text[i])
 	{
-		free(stat);
+		free(text);
 		return (NULL);
 	}
-	res = malloc(sizeof(char) * ft_strlen(stat) - i + 1);
-	if (!res)
-		return (NULL);
-	i++;
-	while (stat[i])
-		res[j++] = stat[i++];
-	res[j] = '\0';
-	free(stat);
-	return (res);
+	newtxt = (char *)malloc(ft_strlen(text) - i + 1);
+	if (!newtxt)
+		return (0);
+	while (text[i++])
+		newtxt[l++] = text[i];
+	newtxt[l] = '\0';
+	free(text);
+	return (newtxt);
 }
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *str;
-	char *b;
+	static	char	*text;
+	char	*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd == -1 || BUFFER_SIZE <= 0)
+		return (0);
+	text = read_all(fd, text);
+	if (!text)
 		return (NULL);
-	str = gnlread(fd, str);
-	if (!str)
-		return (NULL);
-	b = parse_line(str);
-	str = clear_stat(str);
-	return (b);
+	line = get_line(text);
+	text = skip_line(text);
+	return (line);
 }
+
+/*int main()
+{
+	int		i;
+	i = open("yahya.txt", O_RDWR);
+	printf("%s", get_next_line(i));
+	printf("%s", get_next_line(i));
+	printf("%s", get_next_line(i));
+	printf("%s", get_next_line(i));
+}*/
 
 // int main()
 // {
