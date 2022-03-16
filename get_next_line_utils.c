@@ -6,68 +6,57 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:49:14 by dyeboa        #+#    #+#                 */
-/*   Updated: 2022/02/16 16:33:49 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/03/16 13:49:20 by dyeboa        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stddef.h>
-#include <stdlib.h> 
 
 size_t	ft_strlen(const char *s)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (s[i])
+	while (s && s[i])
 		i++;
 	return (i);
 }
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
-{
-	size_t	i;
-	size_t	len_src;
-
-	len_src = ft_strlen(src);
-	i = 0;
-	while (src[i] && (i < size) && i < len_src)
-	{
-		dest[i] = src[i];
-		i++;
-		if (i == size)
-		{
-			dest[--i] = '\0';
-			return (len_src);
-		}
-	}
-	if (i < size)
-		dest[i] = '\0';
-	return (len_src);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char	*str;
-	int		size;
 	int		i;
+	int		j;
 
 	i = 0;
-	size = ft_strlen((char *)s1) + ft_strlen((char *)s2);
-	str = (char *) malloc(((sizeof(char)) * size) + 2);
+	j = 0;
+	if (!s2)
+		return (NULL);
+	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!str)
 		return (NULL);
-	if (str)
+	while (s1 && s1[i])
 	{
-		if (s1 != NULL)
-			ft_strlcpy(str, s1, (ft_strlen(s1) + 1));
-		while (s2[i])
-		{
-			str[(ft_strlen(s1) + i)] = s2[i];
-			i++;
-		}
-		str[((ft_strlen(s1)) + (ft_strlen(s2)))] = '\0';
-		return (str);
+		str[i] = s1[i];
+		i++;
 	}
-	return (NULL);
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[i] = '\0';
+	free((char *)s1);
+	return (str);
+}
+
+int	is_newline(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == '\n')
+			return (1);
+		i++;
+	}
+	return (0);
 }
