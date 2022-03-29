@@ -6,7 +6,7 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:49:14 by dyeboa        #+#    #+#                 */
-/*   Updated: 2022/03/16 13:49:20 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/03/29 20:21:40 by dyeboa        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t	ft_strlen(const char *s)
 	int	i;
 
 	i = 0;
+	if (!s)
+		return (0);
 	while (s && s[i])
 		i++;
 	return (i);
