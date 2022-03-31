@@ -6,12 +6,11 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:18:48 by dyeboa        #+#    #+#                 */
-/*   Updated: 2022/03/31 14:18:13 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/03/31 14:23:37 by dyeboa        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 // returns the text without what is printed.
 char	*new_text(char	*text)
@@ -39,9 +38,7 @@ char	*new_text(char	*text)
 	return (new_text);
 }
 
-/*
-returns line
-*/
+//returns line
 char	*get_line(char	*text)
 {
 	char	*line;
@@ -65,8 +62,8 @@ char	*get_line(char	*text)
 	line[i] = '\0';
 	return (line);
 }
-// leest de tekst
 
+// reads fd
 char	*get_next_line(int fd)
 {
 	static char	*text;
