@@ -6,12 +6,13 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:18:48 by dyeboa        #+#    #+#                 */
-/*   Updated: 2022/03/29 20:29:39 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/03/31 14:18:13 by dyeboa        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
+
 // returns the text without what is printed.
 char	*new_text(char	*text)
 {
@@ -29,8 +30,8 @@ char	*new_text(char	*text)
 		return (NULL);
 	}
 	new_text = malloc(ft_strlen(text) + 1);
-	if (!new_text)
-		return (NULL);
+	if (!(new_text))
+		return (0);
 	while (text[len++])
 		new_text[i++] = text[len];
 	new_text[i] = '\0';
@@ -53,9 +54,9 @@ char	*get_line(char	*text)
 		return (NULL);
 	while (text[len] != '\n' && text[len] != '\0')
 		len++;
-	line = malloc(ft_strlen(text) + 1));
-	if (!line)
-		return (0);
+	line = malloc(ft_strlen(text) + 1);
+	if (!(line))
+		return (NULL);
 	while (i <= len)
 	{
 		line[i] = text[i];
@@ -74,18 +75,22 @@ char	*get_next_line(int fd)
 
 	if (fd == -1 || BUFFER_SIZE < 1)
 		return (0);
-	line = malloc(sizeof(char) * BUFFER_SIZE + 1));
+	line = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!line)
 		return (NULL);
-	i = read(fd, line, BUFFER_SIZE);
-	while (is_newline(text) == 0 && i > 0)
+	i = 1;
+	while (is_newline(text) == 0 && (i != 0))
 	{	
+		i = read(fd, line, BUFFER_SIZE);
+		if (i == -1)
+		{
+			free(line);
+			return (NULL);
+		}
 		line[i] = '\0';
 		text = ft_strjoin(text, line);
 	}
 	free(line);
-	if (!text)
-		return (NULL);
 	line = get_line(text);
 	text = new_text(text);
 	return (line);
