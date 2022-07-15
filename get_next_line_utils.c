@@ -6,7 +6,7 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:49:14 by dyeboa        #+#    #+#                 */
-/*   Updated: 2022/03/31 12:36:28 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/04/05 12:46:29 by dyeboa        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	j = 0;
 	if (!s2)
 		return (NULL);
-	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	str = malloc((ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!str)
 		return (NULL);
 	while (s1 && s1[i])

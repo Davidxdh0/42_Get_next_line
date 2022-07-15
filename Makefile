@@ -6,7 +6,7 @@
 #    By: dyeboa <dyeboa@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/10/26 14:06:32 by dyeboa        #+#    #+#                  #
-#    Updated: 2022/03/16 11:09:32 by dyeboa        ########   odam.nl          #
+#    Updated: 2022/06/15 08:21:53 by dyeboa        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,11 +24,15 @@ INCS	= .
 $(NAME): ${OBJS}
 	ar -rcs $(NAME) $(OBJS)
 
+run: clean
+	${CC} ${FLAGS} ${SRCS} main.c -D BUFFER_SIZE=6000 -o run
+
 all: $(NAME)
 
 clean:
 	$(RM) -f $(OBJS)
 	$(RM) -f $(NAME)
+	$(RM) -f run
 
 fclean: clean
 	$(RM) $(NAME)

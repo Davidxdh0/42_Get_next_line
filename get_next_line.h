@@ -6,7 +6,7 @@
 /*   By: dyeboa <dyeboa@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/06 14:49:17 by dyeboa        #+#    #+#                 */
-/*   Updated: 2022/03/29 20:24:50 by dyeboa        ########   odam.nl         */
+/*   Updated: 2022/04/05 12:37:02 by dyeboa        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
-
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 2
+# endif
 //	get_next_line_utils.c
 size_t	ft_strlen(const char *s);
 char	*ft_strjoin(const char *s1, const char *s2);
